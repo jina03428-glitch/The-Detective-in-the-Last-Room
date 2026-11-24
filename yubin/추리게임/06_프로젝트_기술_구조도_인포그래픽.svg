@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1350" viewBox="0 0 2400 1350">
+  <defs>
+    <filter id="paper" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" seed="17" result="noise"/>
+      <feColorMatrix in="noise" type="saturate" values="0" result="gray"/>
+      <feComponentTransfer in="gray" result="faint">
+        <feFuncA type="table" tableValues="0 0.055"/>
+      </feComponentTransfer>
+      <feBlend in="SourceGraphic" in2="faint" mode="multiply"/>
+    </filter>
+    <pattern id="hatch" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(18)">
+      <line x1="0" y1="0" x2="0" y2="12" stroke="#2b2926" stroke-width="2" opacity="0.12"/>
+    </pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3a3733"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b3f3a"/>
+    </marker>
+    <style>
+      .ko { font-family: "Malgun Gothic", "Noto Sans KR", Arial, sans-serif; }
+      .title { font-size: 54px; font-weight: 700; fill: #262522; letter-spacing: -1px; }
+      .subtitle { font-size: 24px; font-weight: 400; fill: #716a62; }
+      .eyebrow { font-size: 20px; font-weight: 700; fill: #f7f1e7; letter-spacing: 2px; }
+      .principle-label { font-size: 23px; font-weight: 700; fill: #8b3f3a; }
+      .principle { font-size: 34px; font-weight: 700; fill: #292825; }
+      .node-title { font-size: 30px; font-weight: 700; fill: #262522; }
+      .node-sub { font-size: 21px; font-weight: 400; fill: #6e675f; }
+      .card-title-light { font-size: 31px; font-weight: 700; fill: #fbf8f1; }
+      .card-kicker-light { font-size: 18px; font-weight: 700; fill: #e2d6c4; letter-spacing: 1.2px; }
+      .item-title { font-size: 24px; font-weight: 700; fill: #2b2926; }
+      .item-sub { font-size: 20px; font-weight: 400; fill: #706960; }
+      .ops-title { font-size: 27px; font-weight: 700; fill: #2b2926; }
+      .ops-sub { font-size: 19px; font-weight: 400; fill: #706960; }
+      .phase-title { font-size: 24px; font-weight: 700; fill: #fbf8f1; }
+      .phase-text { font-size: 19px; font-weight: 400; fill: #f4eee4; }
+      .mini { font-size: 18px; font-weight: 700; fill: #5f5851; }
+    </style>
+  </defs>
+
+  <rect width="2400" height="1350" fill="#f2ede3" filter="url(#paper)"/>
+
+  <!-- Victorian rail motif -->
+  <path d="M 0 28 H 2400 M 0 40 H 2400" stroke="#2c2a27" stroke-width="4" opacity="0.9"/>
+  <g stroke="#2c2a27" stroke-width="3" opacity="0.38">
+    <path d="M 70 25 v22 M 150 25 v22 M 230 25 v22 M 310 25 v22 M 390 25 v22 M 470 25 v22 M 550 25 v22 M 630 25 v22 M 710 25 v22 M 790 25 v22 M 870 25 v22 M 950 25 v22 M 1030 25 v22 M 1110 25 v22 M 1190 25 v22 M 1270 25 v22 M 1350 25 v22 M 1430 25 v22 M 1510 25 v22 M 1590 25 v22 M 1670 25 v22 M 1750 25 v22 M 1830 25 v22 M 1910 25 v22 M 1990 25 v22 M 2070 25 v22 M 2150 25 v22 M 2230 25 v22 M 2310 25 v22"/>
+  </g>
+
+  <!-- Header -->
+  <rect x="120" y="76" width="250" height="42" rx="4" fill="#8b3f3a"/>
+  <text x="245" y="105" text-anchor="middle" class="ko eyebrow">TECH ARCHITECTURE</text>
+  <text x="120" y="175" class="ko title">《마지막 객실의 탐정》 프로젝트 기술 구조도</text>
+  <text x="120" y="216" class="ko subtitle">AI 추리게임 · 고정된 사건 규칙 · 자유 심문 · 1회차/2회차 반전</text>
+
+  <!-- Principle banner -->
+  <rect x="120" y="252" width="2160" height="100" rx="12" fill="#fbf8f1" stroke="#3b3834" stroke-width="3"/>
+  <rect x="120" y="252" width="265" height="100" rx="12" fill="#ded2c1"/>
+  <rect x="120" y="252" width="265" height="100" rx="12" fill="url(#hatch)"/>
+  <text x="252" y="312" text-anchor="middle" class="ko principle-label">핵심 개발 원칙</text>
+  <text x="445" y="316" class="ko principle">게임 엔진이 진실을 결정하고, AI는 그 진실을 NPC답게 말한다.</text>
+  <circle cx="2190" cy="302" r="26" fill="#8b3f3a"/>
+  <path d="M2178 302 l8 9 17 -20" fill="none" stroke="#fbf8f1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Player and UI -->
+  <circle cx="1200" cy="416" r="38" fill="#2b2926"/>
+  <circle cx="1200" cy="402" r="12" fill="#f2ede3"/>
+  <path d="M1177 435 q23 -28 46 0" fill="#f2ede3"/>
+  <text x="1260" y="425" class="ko mini">플레이어</text>
+  <path d="M1200 455 V485" stroke="#3a3733" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <rect x="795" y="492" width="810" height="96" rx="14" fill="#fbf8f1" stroke="#2e2c29" stroke-width="4"/>
+  <text x="1200" y="532" text-anchor="middle" class="ko node-title">웹 게임 화면</text>
+  <text x="1200" y="566" text-anchor="middle" class="ko node-sub">Next.js 16 · React 19 · TypeScript · Tailwind CSS 4</text>
+
+  <!-- Connectors -->
+  <path d="M1200 588 V625 H455 V657" fill="none" stroke="#3a3733" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M1200 588 V657" fill="none" stroke="#8b3f3a" stroke-width="5" marker-end="url(#arrowRed)"/>
+  <path d="M1200 625 H1945 V657" fill="none" stroke="#3a3733" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <!-- Game core card -->
+  <rect x="120" y="665" width="670" height="330" rx="16" fill="#fbf8f1" stroke="#2d2b28" stroke-width="4"/>
+  <rect x="120" y="665" width="670" height="86" rx="16" fill="#2d2b28"/>
+  <rect x="120" y="735" width="670" height="16" fill="#2d2b28"/>
+  <text x="155" y="698" class="ko card-kicker-light">01 · FIXED TRUTH</text>
+  <text x="155" y="735" class="ko card-title-light">규칙 기반 게임 시스템</text>
+
+  <circle cx="166" cy="800" r="9" fill="#8b3f3a"/>
+  <text x="190" y="808" class="ko item-title">상태 관리</text>
+  <text x="190" y="838" class="ko item-sub">Zustand</text>
+  <circle cx="480" cy="800" r="9" fill="#8b3f3a"/>
+  <text x="504" y="808" class="ko item-title">사건 데이터</text>
+  <text x="504" y="838" class="ko item-sub">JSON · Zod</text>
+
+  <circle cx="166" cy="888" r="9" fill="#8b3f3a"/>
+  <text x="190" y="896" class="ko item-title">규칙 엔진</text>
+  <text x="190" y="926" class="ko item-sub">순수 TypeScript</text>
+  <circle cx="480" cy="888" r="9" fill="#8b3f3a"/>
+  <text x="504" y="896" class="ko item-title">자동 저장</text>
+  <text x="504" y="926" class="ko item-sub">IndexedDB · Dexie</text>
+  <text x="155" y="968" class="ko mini">증거 · 시간표 · 트리거 · 회차 · 엔딩 판정</text>
+
+  <!-- AI card -->
+  <rect x="865" y="665" width="670" height="330" rx="16" fill="#fbf8f1" stroke="#8b3f3a" stroke-width="5"/>
+  <rect x="865" y="665" width="670" height="86" rx="16" fill="#8b3f3a"/>
+  <rect x="865" y="735" width="670" height="16" fill="#8b3f3a"/>
+  <text x="900" y="698" class="ko card-kicker-light">02 · CONTROLLED EXPRESSION</text>
+  <text x="900" y="735" class="ko card-title-light">통제된 AI NPC</text>
+
+  <circle cx="911" cy="800" r="9" fill="#8b3f3a"/>
+  <text x="935" y="808" class="ko item-title">서버 API</text>
+  <text x="935" y="838" class="ko item-sub">비밀 키 · 호출 제한</text>
+  <circle cx="1225" cy="800" r="9" fill="#8b3f3a"/>
+  <text x="1249" y="808" class="ko item-title">LLM API</text>
+  <text x="1249" y="838" class="ko item-sub">질문 이해 · 대사 생성</text>
+
+  <circle cx="911" cy="888" r="9" fill="#8b3f3a"/>
+  <text x="935" y="896" class="ko item-title">제한 도구 호출</text>
+  <text x="935" y="926" class="ko item-sub">허용 정보만 조회</text>
+  <circle cx="1225" cy="888" r="9" fill="#8b3f3a"/>
+  <text x="1249" y="896" class="ko item-title">응답 검증</text>
+  <text x="1249" y="926" class="ko item-sub">Zod · 고정 대사 폴백</text>
+  <text x="900" y="968" class="ko mini">말투 · 감정 · 거짓말 · 증거 반응만 표현</text>
+
+  <!-- Presentation card -->
+  <rect x="1610" y="665" width="670" height="330" rx="16" fill="#fbf8f1" stroke="#566b70" stroke-width="4"/>
+  <rect x="1610" y="665" width="670" height="86" rx="16" fill="#566b70"/>
+  <rect x="1610" y="735" width="670" height="16" fill="#566b70"/>
+  <text x="1645" y="698" class="ko card-kicker-light">03 · PRESENTATION</text>
+  <text x="1645" y="735" class="ko card-title-light">화면·이미지·음향 연출</text>
+
+  <circle cx="1656" cy="800" r="9" fill="#566b70"/>
+  <text x="1680" y="808" class="ko item-title">UI 디자인</text>
+  <text x="1680" y="838" class="ko item-sub">Tailwind CSS</text>
+  <circle cx="1970" cy="800" r="9" fill="#566b70"/>
+  <text x="1994" y="808" class="ko item-title">이미지</text>
+  <text x="1994" y="838" class="ko item-sub">PNG 원본 · WebP 배포</text>
+
+  <circle cx="1656" cy="888" r="9" fill="#566b70"/>
+  <text x="1680" y="896" class="ko item-title">음향</text>
+  <text x="1680" y="926" class="ko item-sub">Howler.js · Web Audio</text>
+  <circle cx="1970" cy="888" r="9" fill="#566b70"/>
+  <text x="1994" y="896" class="ko item-title">장면 효과</text>
+  <text x="1994" y="926" class="ko item-sub">CSS Animation</text>
+  <text x="1645" y="968" class="ko mini">카툰·목탄 배경 · 열차음 · 초침 · 기억 파편</text>
+
+  <!-- AI to engine controlled lookup -->
+  <path d="M865 930 H804" fill="none" stroke="#8b3f3a" stroke-width="4" stroke-dasharray="10 8" marker-end="url(#arrowRed)"/>
+  <rect x="720" y="1010" width="480" height="38" rx="19" fill="#eadbd3"/>
+  <text x="960" y="1037" text-anchor="middle" class="ko mini" fill="#8b3f3a">AI는 게임 엔진의 허용 정보만 조회</text>
+
+  <!-- Operations strip -->
+  <rect x="120" y="1070" width="2160" height="116" rx="14" fill="#e4dbcf" stroke="#8d857b" stroke-width="3"/>
+  <line x1="840" y1="1090" x2="840" y2="1166" stroke="#a89e91" stroke-width="2"/>
+  <line x1="1560" y1="1090" x2="1560" y2="1166" stroke="#a89e91" stroke-width="2"/>
+
+  <text x="160" y="1110" class="ko ops-title">n8n 자동화</text>
+  <text x="160" y="1144" class="ko ops-sub">스토리 모순 검사 · AI 정보 누출 테스트 · 파일 목록 관리</text>
+  <text x="160" y="1171" class="ko mini">※ 게임 진행의 필수 경로에는 사용하지 않음</text>
+
+  <text x="880" y="1110" class="ko ops-title">품질 검사</text>
+  <text x="880" y="1144" class="ko ops-sub">Vitest · Playwright · TypeScript · ESLint</text>
+  <text x="880" y="1171" class="ko mini">모든 엔딩 도달 · 저장 복구 · 회차 조건 검증</text>
+
+  <text x="1600" y="1110" class="ko ops-title">빌드·배포</text>
+  <text x="1600" y="1144" class="ko ops-sub">Git · GitHub · Vite/vinext · Wrangler</text>
+  <text x="1600" y="1171" class="ko mini">Cloudflare 배포 · 필요 시 D1/R2 확장</text>
+
+  <!-- Priority footer -->
+  <g>
+    <rect x="120" y="1210" width="690" height="92" rx="10" fill="#2d2b28"/>
+    <text x="150" y="1248" class="ko phase-title">현재 적용</text>
+    <text x="150" y="1280" class="ko phase-text">Next.js · React · TypeScript · Tailwind · Vite</text>
+
+    <rect x="855" y="1210" width="690" height="92" rx="10" fill="#8b3f3a"/>
+    <text x="885" y="1248" class="ko phase-title">MVP 필수 추가</text>
+    <text x="885" y="1280" class="ko phase-text">Zustand · Zod · Dexie · Howler · Vitest · Playwright</text>
+
+    <rect x="1590" y="1210" width="690" height="92" rx="10" fill="#566b70"/>
+    <text x="1620" y="1248" class="ko phase-title">추후 확장</text>
+    <text x="1620" y="1280" class="ko phase-text">D1 · R2 · PWA · 익명 분석 · 클라우드 저장</text>
+  </g>
+
+  <text x="120" y="1330" class="ko subtitle" font-size="18">《마지막 객실의 탐정》 · 기술 구조 요약 · 2026</text>
+</svg>
