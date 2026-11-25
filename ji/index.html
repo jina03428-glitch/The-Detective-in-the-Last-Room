@@ -8,12 +8,70 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=ui-editor-final-sync-1" />
   </head>
   <body>
     <main class="title-screen" aria-label="게임 시작 화면">
       <div class="film-grain" aria-hidden="true"></div>
       <div class="scene-vignette" aria-hidden="true"></div>
+      <div class="black-screen" aria-hidden="true">
+        <span class="intro-time">21:18</span>
+        <img class="intro-scene" src="./public/assets/train-compartment.png" alt="열차 객실" />
+        <div class="dialogue-ui" aria-hidden="true">
+          <button class="dialogue-menu-button" type="button" aria-label="메뉴 열기" aria-expanded="false" onclick="const ui=this.closest('.dialogue-ui'); const options=ui.querySelector('.dialogue-menu-options'); const open=ui.classList.toggle('menu-open'); options.classList.toggle('is-open', open); options.setAttribute('aria-hidden', String(!open)); this.setAttribute('aria-expanded', String(open));">
+            <img src="./public/assets/dialogue-menu.png" alt="메뉴" />
+          </button>
+          <div class="dialogue-menu-options" aria-hidden="true">
+            <button type="button" data-menu-action="notebook" aria-label="수첩"><img src="./public/assets/menu-notebook.png" alt="수첩" /></button>
+            <button type="button" data-menu-action="move" aria-label="이동"><img src="./public/assets/menu-move.png" alt="이동" /></button>
+            <button type="button" data-menu-action="hint" aria-label="힌트"><img src="./public/assets/menu-hint.png" alt="힌트" /></button>
+            <button type="button" data-menu-action="settings" aria-label="설정"><img src="./public/assets/menu-settings.png" alt="설정" /></button>
+          </div>
+          <img class="dialogue-panel" src="./public/assets/dialogue-panel.png" alt="대화창" />
+          <img class="dialogue-nameplate" src="./public/assets/dialogue-box.png" alt="이름표" />
+          <img class="dialogue-arrow" src="./public/assets/dialogue-arrow.png" alt="다음 대화" />
+          <button class="dialogue-next" type="button" aria-label="다음 대사"></button>
+          <p class="dialogue-text" aria-live="polite"></p>
+          <button class="dialogue-bottom-button dialogue-auto" type="button" aria-label="자동 진행">
+            <img src="./public/assets/dialogue-auto.png" alt="자동" />
+          </button>
+          <button class="dialogue-bottom-button dialogue-fast" type="button" aria-label="빠르게 감기">
+            <img src="./public/assets/fast-forward.png" alt="빠르게 감기" />
+          </button>
+          <button class="dialogue-bottom-button dialogue-record" type="button" aria-label="기록">
+            <img src="./public/assets/dialogue-record.png" alt="기록" />
+          </button>
+        </div>
+      <section class="dialogue-record-overlay" aria-hidden="true" aria-label="지난 대화">
+          <img class="dialogue-record-frame" src="./public/assets/dialogue-record-panel.png" alt="지난 대화" />
+          <div class="dialogue-record-list" aria-live="polite"></div>
+          <button class="dialogue-record-close" type="button" aria-label="기록창 닫기">×</button>
+        </section>
+        <aside class="ui-editor" aria-hidden="true" aria-label="개발용 UI 편집기">
+          <div class="ui-editor-title">UI 편집기 <small>F2</small></div>
+          <label>대상
+            <select id="ui-editor-target">
+              <option value=".dialogue-panel">대화창</option>
+              <option value=".dialogue-nameplate">이름표</option>
+              <option value=".dialogue-text">대사</option>
+              <option value=".dialogue-arrow">화살표</option>
+              <option value=".dialogue-auto">자동 버튼</option>
+              <option value=".dialogue-fast">빨리감기 버튼</option>
+              <option value=".dialogue-record">기록 버튼</option>
+            </select>
+          </label>
+          <div class="ui-editor-coordinates">
+            <label>X <input id="ui-editor-x" type="number" step="1" /></label>
+            <label>Y <input id="ui-editor-y" type="number" step="1" /></label>
+          </div>
+          <div class="ui-editor-actions">
+            <button type="button" id="ui-editor-save">저장</button>
+            <button type="button" id="ui-editor-reset">초기화</button>
+            <button type="button" id="ui-editor-close">닫기</button>
+          </div>
+          <p>대상을 선택한 뒤 화면에서 직접 드래그하세요.</p>
+        </aside>
+      </div>
 
       <section class="hero-copy">
         <img class="game-logo" src="./public/assets/game-logo.png" alt="마지막 방의 탐정" />
@@ -75,6 +133,6 @@
         </div>
       </dialog>
     </main>
-    <script src="./script.js"></script>
+    <script src="./script.js?v=ui-editor-autosave-1"></script>
   </body>
 </html>
