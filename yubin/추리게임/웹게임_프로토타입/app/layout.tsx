@@ -14,20 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://last-cabin-detective.workspace-815047.chatgpt.site'),
-  title: '마지막 객실의 탐정',
-  description: '1897년 런던행 열차에서 벌어진 선택형 미스터리 게임',
-  openGraph: {
-    title: '마지막 객실의 탐정',
-    description: '멈춘 시계, 잠긴 객실, 그리고 기억나지 않는 40분.',
-    images: ['/og.png'],
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: '마지막 객실의 탐정',
-    description: '멈춘 시계, 잠긴 객실, 그리고 기억나지 않는 40분.',
-    images: ['/og.png'],
-  },
+  title: '마지막 객실의 탐정 · 스크립트 리더',
+  description: '대사와 선택 흐름만 간단히 확인하는 스크립트 검수 화면',
 };
 
 export default function RootLayout({

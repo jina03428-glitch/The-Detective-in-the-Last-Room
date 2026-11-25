@@ -1,247 +1,138 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import {
-  dossierCatalog,
-  evidenceCatalog,
-  sceneMap,
-  scenes,
-  type Choice,
-} from './story';
+import { useMemo, useState } from 'react';
+import { sceneMap, scenes, type Choice } from './story';
 
-const firstRunEvidence = [
-  'medicine',
-  'detectiveId',
-  'policeLetter',
-  'notebook',
-  'fakeWatch',
-  'telegram',
-  'glove',
-  'letterOpener',
-  'keyLedger',
-  'research',
-  'journalistNote',
-  'ticket',
-];
+type Run = 1 | 2;
 
-const firstRunDossiers = ['eleanor', 'margaret', 'thomas', 'jonathan', 'samuel', 'hargreaves'];
+const firstScene: Record<Run, string> = { 1: 'p00', 2: 'r00' };
 
 export default function Home() {
-  const [screen, setScreen] = useState<'title' | 'game'>('title');
-  const [sceneId, setSceneId] = useState('p00');
-  const [run, setRun] = useState<1 | 2>(1);
-  const [evidence, setEvidence] = useState<string[]>([]);
-  const [dossiers, setDossiers] = useState<string[]>([]);
-  const [notebookOpen, setNotebookOpen] = useState(false);
-  const [secondRunUnlocked, setSecondRunUnlocked] = useState(false);
-  const [toast, setToast] = useState('');
+  const [run, setRun] = useState<Run>(1);
+  const [sceneId, setSceneId] = useState(firstScene[1]);
+  const [query, setQuery] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const scene = sceneMap[sceneId];
+  const scene = sceneMap[sceneId] ?? sceneMap[firstScene[run]];
   const runScenes = useMemo(() => scenes.filter((item) => item.run === run), [run]);
-  const progress = Math.max(
-    3,
-    ((runScenes.findIndex((item) => item.id === sceneId) + 1) / runScenes.length) * 100,
-  );
+  const filteredScenes = useMemo(() => {
+    const keyword = query.trim().toLocaleLowerCase('ko');
+    if (!keyword) return runScenes;
+    return runScenes.filter((item) =>
+      [item.chapter, item.speaker, item.text, item.time]
+        .join(' ')
+        .toLocaleLowerCase('ko')
+        .includes(keyword),
+    );
+  }, [query, runScenes]);
 
-  useEffect(() => {
-    setSecondRunUnlocked(localStorage.getItem('blackthorn-second-run') === 'unlocked');
-  }, []);
+  const currentIndex = Math.max(0, runScenes.findIndex((item) => item.id === scene.id));
 
-  const enterScene = (nextId: string) => {
-    const nextScene = sceneMap[nextId];
-    if (!nextScene) return;
-
-    if (nextScene.evidence?.length) {
-      const newItems = nextScene.evidence.filter((item) => !evidence.includes(item));
-      if (newItems.length) {
-        setEvidence((current) => [
-          ...current,
-          ...newItems.filter((item) => !current.includes(item)),
-        ]);
-        setToast(`새 증거: ${newItems.map((item) => evidenceCatalog[item].name).join(', ')}`);
-        window.setTimeout(() => setToast(''), 2600);
-      }
-    }
-
-    if (nextScene.dossiers?.length) {
-      setDossiers((current) => [
-        ...current,
-        ...nextScene.dossiers!.filter((item) => !current.includes(item)),
-      ]);
-    }
-
-    setSceneId(nextId);
+  const moveTo = (nextId: string) => {
+    const next = sceneMap[nextId];
+    if (!next) return;
+    setRun(next.run);
+    setSceneId(next.id);
+    setSidebarOpen(false);
   };
 
-  const startRun = (nextRun: 1 | 2) => {
+  const changeRun = (nextRun: Run) => {
     setRun(nextRun);
-    setEvidence(nextRun === 2 ? firstRunEvidence : []);
-    setDossiers(nextRun === 2 ? [...firstRunDossiers] : []);
-    setSceneId(nextRun === 1 ? 'p00' : 'r00');
-    setNotebookOpen(false);
-    setToast('');
-    setScreen('game');
+    setSceneId(firstScene[nextRun]);
+    setQuery('');
   };
 
   const choose = (choice: Choice) => {
-    if (choice.next) enterScene(choice.next);
-    if (choice.action === 'title') {
-      setScreen('title');
-      setNotebookOpen(false);
-    }
-    if (choice.action === 'reset') startRun(1);
-    if (choice.action === 'unlock') {
-      localStorage.setItem('blackthorn-second-run', 'unlocked');
-      setSecondRunUnlocked(true);
-      setScreen('title');
-    }
+    if (choice.next) return moveTo(choice.next);
+    if (choice.action === 'unlock') return changeRun(2);
+    if (choice.action === 'title' || choice.action === 'reset') changeRun(1);
   };
 
-  if (screen === 'title') {
-    return (
-      <main className="title-screen">
-        <div className="film-grain" />
-        <div className="title-vignette" />
-        <section className="title-card">
-          <p className="eyebrow">A BLACKTHORN EXPRESS MYSTERY</p>
-          <h1>마지막 객실의 탐정</h1>
-          <p className="subtitle">멈춘 시계, 잠긴 객실, 그리고 기억나지 않는 40분.</p>
-          <div className="title-actions">
-            <button className="primary-button" onClick={() => startRun(1)}>
-              1회차 · 사건 시작
-            </button>
-            <button
-              className="secondary-button"
-              disabled={!secondRunUnlocked}
-              onClick={() => startRun(2)}
-            >
-              {secondRunUnlocked ? '2회차 · 기억 재구성' : '2회차 · 잠김'}
-            </button>
-          </div>
-          <p className="hint">선택형 미스터리 · 확장 스크립트 · 세 가지 엔딩</p>
-        </section>
-        <p className="title-footer">1897 · LONDON BOUND · BLACKTHORN EXPRESS</p>
-      </main>
-    );
-  }
+  const goRelative = (offset: number) => {
+    const next = runScenes[currentIndex + offset];
+    if (next) moveTo(next.id);
+  };
 
   return (
-    <main className={`game-shell ending-${scene.ending ?? 'none'}`}>
-      <div
-        className="scene-background"
-        style={{ backgroundImage: `url('/assets/backgrounds/${scene.background}')` }}
-      />
-      <div className="scene-overlay" />
-      <div className="film-grain" />
-
-      <header className="game-header">
-        <div>
-          <span className="run-badge">{run}회차</span>
-          <span>{scene.chapter}</span>
+    <main className="reader-shell">
+      <aside className={`scene-sidebar ${sidebarOpen ? 'open' : ''}`}>
+        <div className="sidebar-heading">
+          <div>
+            <p className="kicker">SCRIPT REVIEW</p>
+            <h1>마지막 객실의 탐정</h1>
+          </div>
+          <button className="icon-button mobile-only" onClick={() => setSidebarOpen(false)} aria-label="장면 목록 닫기">×</button>
         </div>
-        <strong>{scene.time}</strong>
-      </header>
-      <div className="progress-track"><span style={{ width: `${progress}%` }} /></div>
 
-      <nav className="game-tools" aria-label="게임 메뉴">
-        <button onClick={() => setNotebookOpen(true)}>
-          사건 수첩 <b>{evidence.length}</b>
-        </button>
-        <button onClick={() => setScreen('title')}>타이틀</button>
-      </nav>
+        <div className="run-tabs" aria-label="회차 선택">
+          <button className={run === 1 ? 'active' : ''} onClick={() => changeRun(1)}>1회차</button>
+          <button className={run === 2 ? 'active' : ''} onClick={() => changeRun(2)}>2회차</button>
+        </div>
 
-      <section className="scene-label">
-        <span>{scene.chapter.split('·')[0]}</span>
-        <p>{scene.chapter.split('·').slice(1).join('·')}</p>
-      </section>
+        <label className="search-box">
+          <span>장면 검색</span>
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="인물, 대사, 장면명" />
+        </label>
 
-      {scene.sprite && (
-        <img
-          key={scene.sprite}
-          className={`character-sprite side-${scene.spriteSide ?? 'center'}`}
-          src={`/assets/sprites/${scene.sprite}`}
-          alt={scene.speaker}
-        />
-      )}
-
-      <section key={scene.id} className="dialogue-panel" aria-live="polite">
-        {scene.ending && (
-          <p className={`ending-tag ${scene.ending}`}>{scene.chapter.split('·')[0]}</p>
-        )}
-        <p className="speaker">{scene.speaker}</p>
-        <p className="dialogue-text">{scene.text}</p>
-        <div className={`choice-list ${scene.choices.length > 3 ? 'compact' : ''}`}>
-          {scene.choices.map((choice, index) => (
-            <button
-              key={`${scene.id}-${index}`}
-              className={choice.emphasis ? 'choice emphasis' : 'choice'}
-              onClick={() => choose(choice)}
-            >
-              <span>{String(index + 1).padStart(2, '0')}</span>
-              {choice.label}
+        <div className="scene-count"><span>{run}회차 장면</span><b>{filteredScenes.length}</b></div>
+        <nav className="scene-list" aria-label={`${run}회차 장면 목록`}>
+          {filteredScenes.map((item) => (
+            <button key={item.id} className={item.id === scene.id ? 'active' : ''} onClick={() => moveTo(item.id)}>
+              <span>{item.id.toUpperCase()}</span>
+              <strong>{item.chapter}</strong>
+              <small>{item.speaker} · {item.time}</small>
             </button>
           ))}
-        </div>
-      </section>
+          {!filteredScenes.length && <p className="empty-result">검색 결과가 없습니다.</p>}
+        </nav>
+      </aside>
 
-      {toast && <div className="evidence-toast">✦ {toast}</div>}
+      {sidebarOpen && <button className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} aria-label="장면 목록 닫기" />}
 
-      {notebookOpen && (
-        <div
-          className="notebook-backdrop"
-          role="presentation"
-          onMouseDown={() => setNotebookOpen(false)}
-        >
-          <aside
-            className="notebook"
-            role="dialog"
-            aria-modal="true"
-            aria-label="사건 수첩"
-            onMouseDown={(event) => event.stopPropagation()}
-          >
-            <div className="notebook-header">
-              <div><p>ARTHUR BELL&apos;S NOTES</p><h2>사건 수첩</h2></div>
-              <button onClick={() => setNotebookOpen(false)} aria-label="닫기">×</button>
-            </div>
+      <section className="script-viewer">
+        <header className="viewer-toolbar">
+          <button className="list-button mobile-only" onClick={() => setSidebarOpen(true)}>장면 목록</button>
+          <p>{run}회차 · {currentIndex + 1} / {runScenes.length}</p>
+          <div className="viewer-navigation">
+            <button disabled={currentIndex === 0} onClick={() => goRelative(-1)}>이전</button>
+            <button disabled={currentIndex === runScenes.length - 1} onClick={() => goRelative(1)}>다음</button>
+          </div>
+        </header>
 
-            <section className="notebook-section">
-              <div className="section-heading">
-                <h3>증거 기록</h3>
-                <span>{evidence.length} / {Object.keys(evidenceCatalog).length}</span>
-              </div>
-              <div className="evidence-grid">
-                {evidence.length ? evidence.map((id, index) => (
-                  <article key={id} className={evidenceCatalog[id].run === 2 ? 'truth-evidence' : ''}>
+        <article className="script-page">
+          <header className="scene-header">
+            <div><p className="scene-id">SCENE {scene.id.toUpperCase()}</p><h2>{scene.chapter}</h2></div>
+            <time>{scene.time}</time>
+          </header>
+
+          <div className="script-block">
+            <p className="speaker">{scene.speaker}</p>
+            <p className="dialogue">{scene.text}</p>
+          </div>
+
+          {!!scene.choices.length && (
+            <section className="choice-section">
+              <div className="choice-heading"><h3>선택지</h3><p>버튼을 누르면 해당 흐름으로 이동합니다.</p></div>
+              <div className="reader-choices">
+                {scene.choices.map((choice, index) => (
+                  <button key={`${scene.id}-${choice.label}`} className={choice.emphasis ? 'emphasis' : ''} onClick={() => choose(choice)}>
                     <span>{String(index + 1).padStart(2, '0')}</span>
-                    <div>
-                      <h3>{evidenceCatalog[id].name}</h3>
-                      <p>{evidenceCatalog[id].detail}</p>
-                    </div>
-                  </article>
-                )) : <p className="empty-note">아직 기록된 증거가 없다.</p>}
+                    <strong>{choice.label}</strong>
+                    <small>{choice.next ? `→ ${choice.next.toUpperCase()}` : '→ 장면 전환'}</small>
+                  </button>
+                ))}
               </div>
             </section>
+          )}
 
-            <section className="notebook-section dossier-section">
-              <div className="section-heading">
-                <h3>인물 기록</h3>
-                <span>{dossiers.length} / {Object.keys(dossierCatalog).length}</span>
-              </div>
-              <div className="dossier-grid">
-                {dossiers.length ? dossiers.map((id) => (
-                  <article key={id}>
-                    <div className="dossier-title">
-                      <h3>{dossierCatalog[id].name}</h3>
-                      <span>{dossierCatalog[id].role}</span>
-                    </div>
-                    <p>{dossierCatalog[id].detail}</p>
-                  </article>
-                )) : <p className="empty-note">아직 정리된 인물 기록이 없다.</p>}
-              </div>
-            </section>
-          </aside>
-        </div>
-      )}
+          <footer className="scene-footer">
+            <span>배경·스프라이트·증거 연출을 제외한 스크립트 검수 화면</span>
+            {scene.ending && <b>{scene.ending.toUpperCase()} ENDING</b>}
+          </footer>
+        </article>
+      </section>
     </main>
   );
 }
+
+
